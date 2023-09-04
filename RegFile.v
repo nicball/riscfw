@@ -12,7 +12,7 @@ module RegFile (
 
   reg [31:0] regfile[31:0];
   
-  initial $monitor("time=%0t, t2=%0d", $time, regfile[7]);
+  // initial $monitor("time=%t, t2=%d", $time, regfile[7]);
   
   assign read_data_1 = read_addr_1 ? regfile[read_addr_1] : 0;
   assign read_data_2 = read_addr_2 ? regfile[read_addr_2] : 0;

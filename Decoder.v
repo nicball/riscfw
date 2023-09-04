@@ -11,8 +11,6 @@ module Decoder (
   output reg error
 );
 
-  initial $monitor("time=%0t, opcode=%0b", $time, opcode);
-
   always@(*) begin
     opcode = instr[6:2];
     funct3 = instr[14:12];
@@ -22,11 +20,11 @@ module Decoder (
     rs1 = instr[19:15];
     rs2 = instr[24:20];
     imm = 0;
-    error = 0;
+    error = instr[1:0] != 2'b11;
     casez (opcode)
       // B type
       5'b11000:
-        imm = { {20{instr[31]}}, instr[7], instr[30:25], instr[11:8] };
+        imm = { {20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0 };
         
       // J type
       5'b11011: begin

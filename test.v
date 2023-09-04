@@ -6,9 +6,10 @@ reg reset;
 CPU cpu(clk, reset);
 
 initial begin
-  #0 clk = 1;
-  #0 reset = 1;
+  clk = 1;
+  reset = 1;
   #30 reset = 0;
+  #2000 $finish();
 end
 
 endmodule

@@ -17,7 +17,7 @@ module ICache (
       // blt t2, t3, loop
       32'hc: instr = 32'hffc3cae3;
       
-      default: instr = 32'b00000000000000000000000000110011;
+      default: instr = 32'b0;
     endcase
   end
 endmodule

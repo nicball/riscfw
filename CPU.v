@@ -19,7 +19,7 @@ module CPU (
   wire [31:0] imm;
   wire [2:0] funct3;
   wire [6:0] funct7;
-  wire valid_instr;
+  wire invalid_instr;
   wire not_used;
   Decoder decoder(
     .instr(instr),
@@ -31,7 +31,7 @@ module CPU (
     .imm(imm),
     .funct3(funct3),
     .funct7(funct7),
-    .error(valid_instr)
+    .error(invalid_instr)
   );
   
   wire [31:0] rs1;
@@ -114,14 +114,16 @@ module CPU (
     instr_has_result = 0;
     instr_result = 0;
     next_pc = pc + 4;
-    bad_instr = ~valid_instr;
+    bad_instr = invalid_instr;
     if (~alu_error) begin
       instr_has_result = 1;
       instr_result = alu_result;
     end
-    else if (~lsu_error & lsu_has_result) begin
-      instr_has_result = 1;
-      instr_result = lsu_result;
+    else if (~lsu_error) begin
+      if (lsu_has_result) begin
+        instr_has_result = 1;
+        instr_result = lsu_result;
+      end
     end
     else if (~bu_error) begin
       if (bu_has_result) begin
@@ -141,4 +143,6 @@ module CPU (
       pc <= next_pc;
     end
   end
+  
+  initial $monitor("time=%t, clk=%d, opcode=%d, imm=%d, pc=%d, target=%d, badinstr=%d", $time, clk, opcode, imm, pc, branch_target, bad_instr);
 endmodule
